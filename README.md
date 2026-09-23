@@ -13,7 +13,8 @@ TurtleRabbit fleet.
 **Status: v0.1 BUILT (2026-09-23).** The framework skeleton is implemented and
 tested — all six layers, the CLI, and the export trio — with a smoke run on the
 real data. See [§6.1 Build status](#61-build-status--v01-2026-09-23) for what
-landed, what is a documented slot, and where the evidence lives. The plan below
+landed, what is a documented slot, and where the evidence lives. **Going to the
+field? [FIELD_DAY.md](FIELD_DAY.md) is the step-by-step.** The plan below
 is unchanged; it remains the plan of record.
 
 **Status: PLAN — the sections below are the original plan of record.** Every
@@ -562,22 +563,32 @@ Evidence: `evidence/audit.json`, `evidence/smoke-2026-09-23/`; tests: 26 passed
 | FK-1 FTF-1 + converters | **done** (2 stubs documented) | `phoenix_csv` (all 4 schemas, duplicate-timestamp handling), `onboard_motion_log` (the `0-` negative repair), `rlearn_npz` round-trip tests. `phoenix_session` lands with FK-7; `ssl_vision_log` is the follow-up |
 | FK-2 sys-ID | **done, structure** | Wheel ensemble fit on the real 61,087 transitions: held-out delta RMSE **[0.0835, 0.0522, 0.0593, 0.0465]** vs rlearn's own [0.0798, 0.0494, 0.0526, 0.0445] (all rows — matched within 4–12 % with the reduced 30-feature set); active-rows RMSE is worse [0.35, 0.18, 0.23, 0.18] vs [0.21, 0.13, 0.14, 0.12] — the gap is stated in the model card, not hidden (`evidence/smoke-2026-09-23/sysid/model_card.json`) |
 | FK-3 DR env | **done** (pure-Python backend) | Batched env, 10 DR axes, z conditioning, cascade-in-the-loop, bounded residual with the verbatim clamps; ~400 batch-steps/s. The MJX/Brax GPU backend is the documented FK-3 slot |
-| FK-4 learner | **CEM done** (smoke), PPO slot open | CEM over the 11 gains: champion objective −112.9 vs baseline ≈ −125 on train seeds; held-out (seeds ≥ 9000) endpoint p95 201 mm vs baseline 233 mm — improved, gates not met (see below) |
-| FK-5 RMA | **two-phase structure done** (linear adapter v0.1) | Phase A CEM over the zero-init base MLP (identity-start at the pure cascade); Phase B closed-form ridge adapter, 13,520 (features, z) pairs + z-probe. The GRU is the FK-5 refinement with the gradient stack |
-| FK-6 export trio | **done** | Firmware registry entry (`SIMULATION ONLY`, `deployment_authorized: false`); residual actor (clamps verbatim, ABI pending-confirmation); Phoenix bundle `movement-rma-1` — **verify: 12 pairs, max_abs_error 0.0** through the pure-stdlib consumer (`fawkes/export/phoenix_consumer.py`, no numpy, loads standalone) |
+| FK-4 learner | **CEM done** (real run), PPO slot open | CEM over the 11 gains (pop 20 × 24 iters): champion beats the baseline on **both** suites — practice 19.2 mm vs 19.8 mm endpoint p95 and 57.2 vs 62.5 mm cross-track p95; DR family 19.4 vs 19.7 / 63.8 vs 67.3. **The practice suite passes every gate** (the apply-today criterion). The DR family fails one gate for every condition: heading max 0.17 rad vs the 0.08 limit on asymmetric-wheel worlds — the known honest gap |
+| FK-5 RMA | **two-phase structure done** (linear adapter v0.1) | Phase A CEM over the zero-init base MLP (identity-start at the pure cascade); Phase B closed-form ridge adapter, 31,480 (features, z) pairs + z-probe. The adapter recovers the oracle's behaviour (practice: zero-z 33.2 → adapter 30.6 → oracle 30.4 mm; DR: adapter 30.7 beats oracle 37.4) but does **not** beat the pure cascade at this budget — reported, not hidden |
+| FK-6 export trio | **done** | Firmware registry entry (`SIMULATION ONLY`, `deployment_authorized: false`); residual actor (clamps verbatim, ABI pending-confirmation); Phoenix bundle `movement-rma-1` — verify: 12 pairs, max_abs_error 2.4e-6 (BLAS vs pure-Python summation order; tolerance 1e-4 = 12.5 µm of residual authority) |
 | FK-7/8 | untouched — no robot, no room | procedure stays in this README |
 
-**The honest smoke reading.** The smoke run's job was plumbing, not
-performance, and the numbers say exactly that: on held-out DR worlds (traction
-to 0.70, battery sag to 0.88, motor lag to 40 ms, vision noise to 15 mm) **no
-condition meets the endpoint gate** — p95 200–270 mm against the 35 mm limit
-(cross-track passes everywhere at ~70–80 mm against 120 mm). CEM improves the
-baseline (233 → 201 mm); the RMA adapter at 5-minute budget sits between the
-zero-z fallback and the (equally undertrained) oracle — the adaptation
-*mechanism* works (the adapter recovers oracle-conditioned behaviour from
-observation history alone; the probe and pairs are recorded), but the base
-policy it conditions is not yet worth conditioning on. Real-budget Phase A/B
-runs are the FK-2–FK-5 work. Full table: `evidence/smoke-2026-09-23/LATEST.md`.
+**The honest training-run reading (2026-09-23, evidence/train-2026-09-23/).**
+The first training run exposed a real environment bug, which is the system
+working as designed: every second leg of a two-leg episode was being timed out
+at ~1.6 s mid-flight (the leg timeout was computed against the *previous*
+leg's already-reached target). Fixed with a regression test
+(`tests/test_envs.py::test_two_leg_episodes_settle_the_second_leg_too`); the
+numbers below are from the retrain on the fixed environment.
+
+After the fix the picture is clean: on the **practice family** (tight ranges
+around the field-proven 2026-07-23 world — the apply-today gate) **the CEM
+champion passes every gate**: endpoint p95 19.2 mm (limit 35), cross-track p95
+57.2 mm (limit 120), and it beats the field-proven baseline on both metrics.
+On the harsh **DR family**, endpoint and cross-track hold (19.4 / 63.8 mm) but
+the heading gate fails for *every* condition including the baseline
+(0.17 rad max vs the 0.08 limit) — asymmetric-wheel worlds are the known gap;
+that is FK-4/5 work, and it is why the field A/B starts at 0.5 m/s. The RMA
+adapter at this budget recovers the oracle's behaviour (mechanism works) but
+does not beat the pure cascade; the residual **actor is not fielded today** —
+only the gain champion rides the existing registry path. Full tables:
+`evidence/train-2026-09-23/LATEST.md`; the field procedure is
+[FIELD_DAY.md](FIELD_DAY.md).
 
 ---
 

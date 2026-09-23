@@ -38,6 +38,20 @@ def test_cascade_meets_house_gates_on_nominal_world():
     assert s["saturation_frac"] <= 0.08
 
 
+def test_two_leg_episodes_settle_the_second_leg_too():
+    """Regression: the leg-advance branch once computed leg 2's timeout from
+    leg 1's (already reached) target, so every second leg timed out mid-flight
+    at ~1.6 s with 0.3-0.5 m endpoints."""
+    env = MovementEnv(family=NominalFamily(), legs=2)
+    s = _run(env)
+    assert s["endpoint_p95_m"] <= 0.035, s
+    # every second leg actually settled rather than timing out short
+    for row in env.metrics:
+        assert len(row["endpoint"]) == 2
+        assert row["leg_time"][1] > 0.0
+        assert row["endpoint"][1] < 0.035
+
+
 def test_dr_family_z_in_bounds_and_reproducible():
     fam = DRFamily()
     a = fam.sample(64, seed=5)

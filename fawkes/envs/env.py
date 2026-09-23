@@ -309,6 +309,10 @@ class MovementEnv:
             self.done |= done_all
             fresh = leg_done & ~self.done
             if np.any(fresh):
+                # the new target FIRST: leg_init_dist and the leg timeout are
+                # computed against the leg the robot is about to drive, not
+                # the one it just finished (the v0.1 bug this comment buries)
+                self._new_leg_targets()
                 self.leg_start[fresh] = self.pos[fresh]
                 self.leg_start_t[fresh] = self.t
                 self.leg_init_dist[fresh] = np.linalg.norm(
@@ -316,7 +320,6 @@ class MovementEnv:
                 )
                 for i in np.nonzero(fresh)[0]:
                     self.sat_ticks[i] = 0
-                self._new_leg_targets()
                 self._reset_refs_per_row(fresh)
             # zero per-leg accumulators for continuing rows
             self.cross_sq[fresh] = 0.0

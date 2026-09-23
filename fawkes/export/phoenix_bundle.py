@@ -109,5 +109,8 @@ def verify_bundle(path: str | Path) -> dict:
         "pairs": checked,
         "max_abs_error": worst,
         "digest": bundle.get("digest"),
-        "ok": worst < 1e-9,
+        # not exact-zero on purpose: the numpy (BLAS) forward and the pure-Python
+        # consumer sum in different orders, so ~1e-6 fp noise is expected on
+        # actions in [-1, 1]. 1e-4 on a residual action = 12.5 um of authority.
+        "ok": worst < 1e-4,
     }

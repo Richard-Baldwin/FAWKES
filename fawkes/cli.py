@@ -28,6 +28,7 @@ from fawkes.export.residual_actor import build_actor, write_actor
 from fawkes.export.phoenix_bundle import build_bundle, write_bundle, verify_bundle
 
 TRAIN_SEEDS = (11, 22, 33, 44)
+PRACTICE_SEEDS = tuple(range(9101, 9109))  # held-out, on the practice family
 
 
 def _evidence(tag: str) -> Path:
@@ -127,16 +128,13 @@ def cmd_rma(args) -> None:
     print(f"rma phase_a={a['best_score']:.3f} probe_pairs={b['pairs']} -> {out}")
 
 
-def cmd_evaluate(args) -> None:
-    out = _evidence(args.tag)
-    env = MovementEnv(family=DRFamily(), legs=2)
+def _run_conditions(env, seeds, out):
     conditions = {}
-
-    conditions["baseline_knobs"] = run_suite(env, seeds=HELD_OUT_SEEDS, knobs=np.tile(knobs_to_vec(BASELINE_KNOBS), (8, 1)), z_mode="none")
+    conditions["baseline_knobs"] = run_suite(env, seeds=seeds, knobs=np.tile(knobs_to_vec(BASELINE_KNOBS), (8, 1)), z_mode="none")
     cem_path = out / "cem_champion.json"
     if cem_path.exists():
         champ = json.loads(cem_path.read_text(encoding="utf-8"))
-        conditions["cem_knobs"] = run_suite(env, seeds=HELD_OUT_SEEDS, knobs=np.tile(knobs_to_vec(champ["knobs"]), (8, 1)), z_mode="none")
+        conditions["cem_knobs"] = run_suite(env, seeds=seeds, knobs=np.tile(knobs_to_vec(champ["knobs"]), (8, 1)), z_mode="none")
     rma_path = out / "rma_base.json"
     if rma_path.exists():
         from fawkes.policies.rma import load_adapter
@@ -144,15 +142,22 @@ def cmd_evaluate(args) -> None:
         base = BasePolicy()
         base.set_params(np.array(json.loads(rma_path.read_text(encoding="utf-8"))["params"]))
         adapter = load_adapter(out / "rma_adapter.json")
-        conditions["rma_oracle"] = run_suite(env, seeds=HELD_OUT_SEEDS, base=base, z_mode="oracle")
-        conditions["rma_adapter"] = run_suite(env, seeds=HELD_OUT_SEEDS, base=base, adapter=adapter)
-        conditions["rma_zero"] = run_suite(env, seeds=HELD_OUT_SEEDS, base=base, z_mode="zero")
+        conditions["rma_oracle"] = run_suite(env, seeds=seeds, base=base, z_mode="oracle")
+        conditions["rma_adapter"] = run_suite(env, seeds=seeds, base=base, adapter=adapter)
+        conditions["rma_zero"] = run_suite(env, seeds=seeds, base=base, z_mode="zero")
+    return conditions
 
-    dump_json(out / "evaluation.json", conditions)
-    for name, res in conditions.items():
-        s = res["summary"]
-        g = res["gates"]
-        print(f"{name:14s} endpoint_p95={s['endpoint_p95_m']:.4f} cross_p95={s['cross_track_p95_m']:.4f} pass={g['all_pass']}")
+
+def cmd_evaluate(args) -> None:
+    out = _evidence(args.tag)
+    practice = _run_conditions(MovementEnv(family=DRFamily.practice(), legs=2), PRACTICE_SEEDS, out)
+    dr = _run_conditions(MovementEnv(family=DRFamily(), legs=2), HELD_OUT_SEEDS, out)
+    dump_json(out / "evaluation.json", {"practice": practice, "dr_family": dr})
+    for suite, conds in (("practice", practice), ("dr-family", dr)):
+        for name, res in conds.items():
+            s = res["summary"]
+            g = res["gates"]
+            print(f"{suite:9s} {name:14s} endpoint_p95={s['endpoint_p95_m']:.4f} cross_p95={s['cross_track_p95_m']:.4f} pass={g['all_pass']}")
 
 
 def cmd_export(args) -> None:
@@ -187,24 +192,29 @@ def cmd_report(args) -> None:
     out = _evidence(args.tag)
     sections = []
     ev = json.loads((out / "evaluation.json").read_text(encoding="utf-8"))
-    rows = ["| Condition | Endpoint p95 (m) | Cross-track p95 (m) | Heading max (rad) | Sat frac | Boundary | All gates |", "| --- | ---: | ---: | ---: | ---: | ---: | --- |"]
-    for name, res in ev.items():
-        s = res["summary"]
-        g = res["gates"]
-        tta = res.get("time_to_adapt_s", "")
-        rows.append(f"| {name} | {s['endpoint_p95_m']:.4f} | {s['cross_track_p95_m']:.4f} | {s['heading_max_rad']:.4f} | {s['saturation_frac']:.4f} | {s['boundary_violations']} | {'PASS' if g['all_pass'] else 'FAIL'} |")
-    sections.append(("Held-out conditions (seeds >= 9000, never trained on)", "\n".join(rows)))
-    first = next(iter(ev.values()))
+    suites = ev if "dr_family" not in ev else {"practice": ev["practice"], "dr family (held-out)": ev["dr_family"]}
+    for suite_name, conds in suites.items():
+        rows = [
+            "| Condition | Endpoint p95 (m) | Cross-track p95 (m) | Heading max (rad) | Sat frac | Boundary | All gates |",
+            "| --- | --- | ---: | ---: | ---: | ---: | --- |",
+        ]
+        for name, res in conds.items():
+            s = res["summary"]
+            g = res["gates"]
+            rows.append(f"| {name} | {s['endpoint_p95_m']:.4f} | {s['cross_track_p95_m']:.4f} | {s['heading_max_rad']:.4f} | {s['saturation_frac']:.4f} | {s['boundary_violations']} | {'PASS' if g['all_pass'] else 'FAIL'} |")
+        sections.append((f"Suite: {suite_name}", "\n".join(rows)))
+    first = next(iter(next(iter(suites.values())).values()))
     sections.append(("Gates (the FAILing condition shown for context)", gates_table(first["gates"])))
     sections.append(("Provenance", provenance_block({"tag": args.tag})))
     sections.append(("Honest caveats", (
-        "- v0.1 smoke budgets: small populations/iterations; a real run is FK-2..FK-5.\n"
+        "- The champion is a hypothesis until the guarded A/B on the field; the\n"
+        "  simulator-vs-real gap warning (203 vs 104 mm cross-track) is standing.\n"
         "- The v0.1 adapter is a closed-form linear head over engineered window\n"
         "  features; the GRU lands with the PPO gradient stack.\n"
         "- Pure-Python env backend at 50 Hz; the MJX/Brax backend is FK-3.\n"
         "- Nothing here touched a robot. deployment_authorized stays false."
     )))
-    write_report(out / "LATEST.md", f"FAWKES smoke run {args.tag}", sections)
+    write_report(out / "LATEST.md", f"FAWKES run {args.tag}", sections)
     print(f"report -> {out / 'LATEST.md'}")
 
 
@@ -220,6 +230,17 @@ def cmd_run_smoke(args) -> None:
     args.pop, args.iterations = 12, 6
     cmd_cem(args)
     args.pop, args.iterations, args.b_seeds = 12, 5, 10
+    cmd_rma(args)
+    cmd_evaluate(args)
+    cmd_export(args)
+    cmd_report(args)
+
+
+def cmd_train(args) -> None:
+    cmd_audit(args)
+    args.pop, args.iterations = args.cem_pop, args.cem_iters
+    cmd_cem(args)
+    args.pop, args.iterations, args.b_seeds = args.rma_pop, args.rma_iters, args.rma_b_seeds
     cmd_rma(args)
     cmd_evaluate(args)
     cmd_export(args)
@@ -257,6 +278,14 @@ def main(argv=None) -> None:
     p.add_argument("--tag", type=str, default="runs")
     p = add("verify", cmd_verify, help="replay a bundle's verification pairs")
     p.add_argument("bundle")
+    p = add("train", cmd_train, help="real-budget training: cem -> rma -> evaluate -> export -> report")
+    p.add_argument("--tag", type=str, default="train")
+    p.add_argument("--seed", type=int, default=7)
+    p.add_argument("--cem-pop", type=int, default=20)
+    p.add_argument("--cem-iters", type=int, default=24)
+    p.add_argument("--rma-pop", type=int, default=16)
+    p.add_argument("--rma-iters", type=int, default=16)
+    p.add_argument("--rma-b-seeds", type=int, default=16)
     p = add("run-smoke", cmd_run_smoke, help="audit -> identify -> cem -> rma -> evaluate -> export -> report")
     p.add_argument("--tag", type=str, default="runs")
     p.add_argument("--seed", type=int, default=7)

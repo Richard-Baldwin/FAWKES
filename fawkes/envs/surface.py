@@ -66,11 +66,15 @@ class SurfaceDraw:
 class DRFamily:
     """Sampled around the identified values; every draw is reproducible."""
 
+    def __init__(self) -> None:
+        self.axes: dict[str, tuple[float, float, float]] = dict(AXES)
+        self.family_name = "dr-family-1"
+
     def sample(self, n: int, seed: int) -> SurfaceDraw:
         rng = np.random.default_rng(seed)
-        u = rng.random((n, len(AXES)))
+        u = rng.random((n, len(self.axes)))
         draw: dict[str, np.ndarray] = {}
-        for i, (name, (lo, hi, _)) in enumerate(AXES.items()):
+        for i, (name, (lo, hi, _)) in enumerate(self.axes.items()):
             draw[name] = lo + u[:, i] * (hi - lo)
         # integer-ish latencies
         draw["vision_latency_ticks"] = np.round(draw["vision_latency_ticks"])
@@ -138,7 +142,30 @@ class DRFamily:
         )
 
     def family_id(self) -> str:
-        return "dr-family-1"
+        return self.family_name
+
+    @classmethod
+    def practice(cls) -> "DRFamily":
+        """The practice-field family: tight ranges around the identified,
+        field-proven 2026-07-23 world. This is the 'apply today' gate family;
+        the full family remains the robustness gate."""
+        fam = cls()
+        for name, (lo, hi) in {
+            "traction": (0.95, 1.05),
+            "lateral_scale": (0.880, 0.895),
+            "gain_asym": (0.0, 0.02),
+            "motor_tau_s": (0.018, 0.024),
+            "battery_sag": (0.96, 1.0),
+            "vision_noise_m": (0.003, 0.007),
+            "vision_latency_ticks": (0.0, 2.0),
+            "cmd_latency_ticks": (0.0, 1.0),
+            "disturbance_p": (0.0, 0.001),
+            "mass_scale": (0.95, 1.1),
+        }.items():
+            lo, hi = sorted((lo, hi))
+            fam.axes[name] = (lo, hi, fam.axes[name][2])
+        fam.family_name = "dr-family-1-practice"
+        return fam
 
 
 DEFAULT_FAMILY = DRFamily()

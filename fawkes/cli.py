@@ -231,6 +231,13 @@ def cmd_dashboard(args) -> None:
     print(f"dashboard -> {out}")
 
 
+def cmd_arena(args) -> None:
+    from fawkes.viz.arena import build_arena
+
+    out = build_arena(args.tag, practice_seed=args.practice_seed, dr_seed=args.dr_seed)
+    print(f"arena -> {out}")
+
+
 def cmd_run_smoke(args) -> None:
     cmd_audit(args)
     cmd_identify(args)
@@ -298,6 +305,10 @@ def main(argv=None) -> None:
     p.add_argument("--seed", type=int, default=7)
     p = add("dashboard", cmd_dashboard, help="render evidence/<tag>/dashboard.png from a run's artifacts")
     p.add_argument("--tag", type=str, default="runs")
+    p = add("arena", cmd_arena, help="animated side-by-side simulator: evidence/<tag>/arena.html")
+    p.add_argument("--tag", type=str, default="runs")
+    p.add_argument("--practice-seed", type=int, default=9101)
+    p.add_argument("--dr-seed", type=int, default=9003)
     args = ap.parse_args(argv)
     args.func(args)
 

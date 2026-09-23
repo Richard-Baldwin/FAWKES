@@ -1,0 +1,92 @@
+{
+  "kind": "fawkes-cem-champion-1",
+  "knobs": {
+    "kp_pos": 5.174961933055686,
+    "kp_vel": 0.8905702241489741,
+    "acc_ff_lead_s": 0.07236397835226145,
+    "target_brake_scale": 0.4973325064431356,
+    "target_brake_reaction_s": 0.190994839423892,
+    "kp_heading": 7.676450676572253,
+    "kp_yaw_rate": 0.2738647236293293,
+    "omega_corr_max": 2.868408110413671,
+    "trajectory_brake_scale": 0.40338722943687916,
+    "orient_lag_tau_s": 0.03870552283855732,
+    "plant_speed_guard": 0.9902956808474922
+  },
+  "baseline": {
+    "kp_pos": 5.0,
+    "kp_vel": 0.7,
+    "acc_ff_lead_s": 0.14,
+    "target_brake_scale": 0.5,
+    "target_brake_reaction_s": 0.2,
+    "kp_heading": 6.0,
+    "kp_yaw_rate": 0.3,
+    "omega_corr_max": 3.0,
+    "trajectory_brake_scale": 0.5,
+    "orient_lag_tau_s": 0.05,
+    "plant_speed_guard": 1.0
+  },
+  "training": {
+    "algorithm": "cross-entropy method over the 11 interpretable gains",
+    "seeds": [
+      11,
+      22,
+      33,
+      44
+    ],
+    "population": 24,
+    "iterations": 40,
+    "seed": 7,
+    "dr_family": "dr-family-1"
+  },
+  "held_out_summary": {
+    "legs": 16,
+    "endpoint_p95_m": 0.0138,
+    "endpoint_max_m": 0.01627,
+    "cross_track_p95_m": 0.05829,
+    "cross_track_max_m": 0.08939,
+    "heading_max_rad": 0.04327,
+    "saturation_frac": 0.0,
+    "boundary_violations": 0
+  },
+  "held_out_gates": {
+    "endpoint_p95_m": {
+      "value": 0.0138,
+      "limit": 0.035,
+      "stretch": 0.01,
+      "pass": true,
+      "meets_stretch": false
+    },
+    "cross_track_p95_m": {
+      "value": 0.05829,
+      "limit": 0.12,
+      "stretch": 0.06,
+      "pass": true,
+      "meets_stretch": true
+    },
+    "heading_max_rad": {
+      "value": 0.04327,
+      "limit": 0.08,
+      "stretch": 0.05,
+      "pass": true,
+      "meets_stretch": true
+    },
+    "saturation_frac": {
+      "value": 0.0,
+      "limit": 0.08,
+      "stretch": 0.04,
+      "pass": true,
+      "meets_stretch": true
+    },
+    "boundary_violations": {
+      "value": 0,
+      "limit": 0,
+      "stretch": 0,
+      "pass": true,
+      "meets_stretch": true
+    },
+    "all_pass": true
+  },
+  "best_objective": -43.77692315986765,
+  "deployment_authorized": false
+}

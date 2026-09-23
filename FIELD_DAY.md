@@ -10,9 +10,9 @@ run from: **FAWKES** = `C:\Users\rishi\Documents\GitHub\FAWKES`,
 
 | Artifact | Installable today? | Path |
 | --- | --- | --- |
-| **CEM gain champion** (11 firmware gains) | **YES** — through the existing guarded A/B path (section 3) | `evidence/train-2026-09-23/firmware_registry_entry.json` |
-| Residual actor (the RMA network) | **NO** — the live firmware's `turtlerabbit-motion-v1` ABI must first be confirmed against the robot's `experimental` branch, and Phoenix has no consumer module yet (FK-6 follow-up) | `evidence/train-2026-09-23/residual_actor.json` |
-| Phoenix bundle `movement-rma-1` | **NO** — same reason; it verifies offline only | `evidence/train-2026-09-23/phoenix_bundle_movement-rma-1.json` |
+| **CEM gain champion** (11 firmware gains) | **YES** — through the existing guarded A/B path (section 3) | `evidence/train-long-2026-09-23/firmware_registry_entry.json` |
+| Residual actor (the RMA network) | **NO** — the live firmware's `turtlerabbit-motion-v1` ABI must first be confirmed against the robot's `experimental` branch, and Phoenix has no consumer module yet (FK-6 follow-up) | `evidence/train-long-2026-09-23/residual_actor.json` |
+| Phoenix bundle `movement-rma-1` | **NO** — same reason; it verifies offline only | `evidence/train-long-2026-09-23/phoenix_bundle_movement-rma-1.json` |
 
 Two rules that do not bend today:
 
@@ -29,8 +29,9 @@ In FAWKES:
 
 ```powershell
 python -m pytest tests -q                       # 27 passed
-python -m fawkes.cli verify evidence\train-2026-09-23\phoenix_bundle_movement-rma-1.json
-type evidence\train-2026-09-23\LATEST.md
+python -m fawkes.cli verify evidence\train-long-2026-09-23\phoenix_bundle_movement-rma-1.json
+python -m fawkes.cli dashboard --tag train-long-2026-09-23   # evidence\train-long-2026-09-23\dashboard.png
+type evidence\train-long-2026-09-23\LATEST.md
 ```
 
 Read the `practice` suite table in `LATEST.md` and apply this decision rule:
@@ -41,13 +42,15 @@ Read the `practice` suite table in `LATEST.md` and apply this decision rule:
   (sections 2 and 5 still run, baseline stays active). That is a good day too:
   the flywheel grows either way.
 
-**Verdict for the 2026-09-23 champion (already computed — GO):** on the
-practice suite the champion beats the field-proven baseline on both metrics
-(endpoint p95 **19.2 vs 19.8 mm**, cross-track p95 **57.2 vs 62.5 mm**) and
-passes every gate. Known gap, on the record before you leave: on the harsh DR
-family the heading gate fails for *every* condition including the baseline
-(0.17 rad vs the 0.08 limit) — start the ladder at 0.5 m/s and watch heading
-on the diagonals.
+**Verdict for the 2026-09-23 champion (already computed — GO; this is the
+continued-training run, `train-long-2026-09-23`):** on the practice suite the
+champion beats the field-proven baseline on both metrics (endpoint p95
+**18.1 vs 19.8 mm**, cross-track p95 **56.4 vs 62.5 mm**) and passes every
+gate. It also beats the earlier same-day champion (19.2 / 57.2 mm), so the
+long run is the one to carry. Known gap, on the record before you leave: on
+the harsh DR family the heading gate fails for *every* condition including the
+baseline (0.17 rad vs the 0.08 limit) — start the ladder at 0.5 m/s and watch
+heading on the diagonals.
 
 ## 2. Lab bring-up (15 minutes)
 
@@ -116,14 +119,14 @@ RoboCup-Research copy of RobotFramework is a *stale* `main` snapshot and is
 only the format reference):
 
 1. Back up: `cp config/motion_calibrations.json config/motion_calibrations.json.bak-<date>`
-2. Paste the `fawkes-cem-<tag>` entry from `evidence\train-2026-09-23\
+2. Paste the `fawkes-cem-<tag>` entry from `evidence\train-long-2026-09-23\
    firmware_registry_entry.json` into the `profiles` map, **next to** (never
    over) `field-proven-20260723`.
 3. Apply and verify:
 
    ```bash
-   python3 tools/select_motion_calibration.py fawkes-cem-train-2026-09-23 --check   # dry check
-   python3 tools/select_motion_calibration.py fawkes-cem-train-2026-09-23           # patches Motion.yaml
+   python3 tools/select_motion_calibration.py fawkes-cem-train-long-2026-09-23 --check   # dry check
+   python3 tools/select_motion_calibration.py fawkes-cem-train-long-2026-09-23           # patches Motion.yaml
    ```
 
 4. Restart RobotFramework through the normal operator workflow (it runs as

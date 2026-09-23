@@ -590,6 +590,16 @@ only the gain champion rides the existing registry path. Full tables:
 `evidence/train-2026-09-23/LATEST.md`; the field procedure is
 [FIELD_DAY.md](FIELD_DAY.md).
 
+**Continued training, same day (`evidence/train-long-2026-09-23/`).** A
+second, longer run (CEM 24 × 40, RMA 20 × 28) improved the champion again on
+both suites — practice **18.1 mm endpoint / 56.4 mm cross-track p95** (baseline
+19.8 / 62.5), DR family 18.4 / 61.9 — and this is the run FIELD_DAY.md
+carries. Every run now renders a one-page picture of itself:
+`python -m fawkes.cli dashboard --tag <tag>` → `evidence/<tag>/dashboard.png`
+(trajectories baseline-vs-champion on practice and DR worlds, gate bars,
+Phase-A convergence, the blind-adaptation curve, and the z-probe R² —
+including its honest weakness).
+
 ---
 
 ## 7. Risks and unknowns, honestly

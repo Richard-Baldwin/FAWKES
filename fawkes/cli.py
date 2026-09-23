@@ -224,6 +224,13 @@ def cmd_verify(args) -> None:
     print(json.dumps(verify_bundle(args.bundle), indent=2))
 
 
+def cmd_dashboard(args) -> None:
+    from fawkes.viz.dashboard import build_dashboard
+
+    out = build_dashboard(args.tag)
+    print(f"dashboard -> {out}")
+
+
 def cmd_run_smoke(args) -> None:
     cmd_audit(args)
     cmd_identify(args)
@@ -289,6 +296,8 @@ def main(argv=None) -> None:
     p = add("run-smoke", cmd_run_smoke, help="audit -> identify -> cem -> rma -> evaluate -> export -> report")
     p.add_argument("--tag", type=str, default="runs")
     p.add_argument("--seed", type=int, default=7)
+    p = add("dashboard", cmd_dashboard, help="render evidence/<tag>/dashboard.png from a run's artifacts")
+    p.add_argument("--tag", type=str, default="runs")
     args = ap.parse_args(argv)
     args.func(args)
 

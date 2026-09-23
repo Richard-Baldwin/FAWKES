@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fawkes-rl"
+version = "0.1.0"
+description = "FAWKES: Field-Adaptive Wheel-control & Kinetics Execution System - a universal RL movement framework for RoboCup SSL, tailored for Phoenix Server"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.5"]
+
+[project.scripts]
+fawkes = "fawkes.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["fawkes*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "data_root": "C:\\Users\\rishi\\Documents\\GitHub\\RoboCup-Research",
+  "expected": {
+    "csv_traces": 162,
+    "csv_rows": 67593,
+    "csv_schemas": 4,
+    "onboard_logs": 12,
+    "onboard_log_bytes": 17061241
+  },
+  "csv": {
+    "traces": 162,
+    "rows": 67593,
+    "schema_histogram": {
+      "A": 107,
+      "D": 8,
+      "B": 27,
+      "C": 20
+    },
+    "matches_expected": true
+  },
+  "onboard_logs": {
+    "present": 8,
+    "expected": 12,
+    "note": "motion_*.log files are absent from this copy; their prepared content lives in testing/rlearn/data/transitions.npz (61,087 transitions)"
+  },
+  "rlearn_transitions": {
+    "rows": 61087,
+    "features": 47,
+    "split_counts": {
+      "0": 48942,
+      "1": 12145
+    },
+    "sha256": "871d1bf013905ec144c4b29e6bad79d0ae39638dc4e02632bac34fd60a2d229d"
+  },
+  "artifacts": {
+    "calibration_latest": {
+      "path": "C:\\Users\\rishi\\Documents\\GitHub\\RoboCup-Research\\generalinformation\\calibration\\latest.json",
+      "present": true,
+      "sha256": "8ecfec2d6e8548cf5753a8803adebdad467ec53e280824521506212e2893a928"
+    },
+    "practice_baseline_profile": {
+      "path": "C:\\Users\\rishi\\Documents\\GitHub\\RoboCup-Research\\generalinformation\\calibration\\profiles\\practice-baseline-2026-07-23.json",
+      "present": true,
+      "sha256": "a36b8054457158ca7d56735a5ad1b2f3f51a285d9219c191c752d88ef3868dc9"
+    },
+    "offline_candidate_profile": {
+      "path": "C:\\Users\\rishi\\Documents\\GitHub\\RoboCup-Research\\generalinformation\\calibration\\profiles\\offline-learned-candidate-20260805.json",
+      "present": true,
+      "sha256": "f5740159b83cbc9fc2f4be3d207080972ac5f456f91558f9b06f4de8bdb9e05a"
+    },
+    "rlearn_champion": {
+      "path": "C:\\Users\\rishi\\Documents\\GitHub\\RoboCup-Research\\testing\\rlearn\\checkpoints\\champion.json",
+      "present": true,
+      "sha256": "898ea10366c07fbb35c12a5450a068652b7293dfe3ab81a93691d4d98ec8da19"
+    },
+    "rlearn_manifest": {
+      "path": "C:\\Users\\rishi\\Documents\\GitHub\\RoboCup-Research\\testing\\rlearn\\data\\manifest.json",
+      "present": true,
+      "sha256": "43594b635916e12b76e7dd7f5d6fda47cbad35a4ff86f37b76ff364ff24ae488"
+    },
+    "firmware_motion_calibrations": {
+      "path": "C:\\Users\\rishi\\Documents\\GitHub\\RoboCup-Research\\RobotFramework\\config\\motion_calibrations.json",
+      "present": true,
+      "sha256": "16da162708a5022812f887f5eecc0e34c6bc8a6f4148e75eee9e0e0606f9a8a6"
+    },
+    "firmware_motion_yaml": {
+      "path": "C:\\Users\\rishi\\Documents\\GitHub\\RoboCup-Research\\RobotFramework\\config\\Motion.yaml",
+      "present": true,
+      "sha256": "71270324b48a64fe097814d53e5178ca07d675cfd82ceb90d51621b9bde896f1"
+    }
+  },
+  "firmware": {
+    "branch": "main",
+    "head": "bab9d0373d616c277aa2e180ea31690e12267c96"
+  }
+}

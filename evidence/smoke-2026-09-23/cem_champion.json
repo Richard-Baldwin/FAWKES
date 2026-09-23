@@ -1,0 +1,92 @@
+{
+  "kind": "fawkes-cem-champion-1",
+  "knobs": {
+    "kp_pos": 4.48285019125076,
+    "kp_vel": 0.6777606580229323,
+    "acc_ff_lead_s": 0.07007887974825308,
+    "target_brake_scale": 0.4,
+    "target_brake_reaction_s": 0.21632779096349397,
+    "kp_heading": 4.0,
+    "kp_yaw_rate": 0.4058260651851454,
+    "omega_corr_max": 2.2,
+    "trajectory_brake_scale": 0.5662146189831234,
+    "orient_lag_tau_s": 0.03414693063351268,
+    "plant_speed_guard": 1.0
+  },
+  "baseline": {
+    "kp_pos": 5.0,
+    "kp_vel": 0.7,
+    "acc_ff_lead_s": 0.14,
+    "target_brake_scale": 0.5,
+    "target_brake_reaction_s": 0.2,
+    "kp_heading": 6.0,
+    "kp_yaw_rate": 0.3,
+    "omega_corr_max": 3.0,
+    "trajectory_brake_scale": 0.5,
+    "orient_lag_tau_s": 0.05,
+    "plant_speed_guard": 1.0
+  },
+  "training": {
+    "algorithm": "cross-entropy method over the 11 interpretable gains",
+    "seeds": [
+      11,
+      22,
+      33,
+      44
+    ],
+    "population": 12,
+    "iterations": 6,
+    "seed": 7,
+    "dr_family": "dr-family-1"
+  },
+  "held_out_summary": {
+    "legs": 16,
+    "endpoint_p95_m": 0.11531,
+    "endpoint_max_m": 0.22972,
+    "cross_track_p95_m": 0.0717,
+    "cross_track_max_m": 0.08618,
+    "heading_max_rad": 0.06168,
+    "saturation_frac": 0.0,
+    "boundary_violations": 0
+  },
+  "held_out_gates": {
+    "endpoint_p95_m": {
+      "value": 0.11531,
+      "limit": 0.035,
+      "stretch": 0.01,
+      "pass": false,
+      "meets_stretch": false
+    },
+    "cross_track_p95_m": {
+      "value": 0.0717,
+      "limit": 0.12,
+      "stretch": 0.06,
+      "pass": true,
+      "meets_stretch": false
+    },
+    "heading_max_rad": {
+      "value": 0.06168,
+      "limit": 0.08,
+      "stretch": 0.05,
+      "pass": true,
+      "meets_stretch": false
+    },
+    "saturation_frac": {
+      "value": 0.0,
+      "limit": 0.08,
+      "stretch": 0.04,
+      "pass": true,
+      "meets_stretch": true
+    },
+    "boundary_violations": {
+      "value": 0,
+      "limit": 0,
+      "stretch": 0,
+      "pass": true,
+      "meets_stretch": true
+    },
+    "all_pass": false
+  },
+  "best_objective": -112.89986771320915,
+  "deployment_authorized": false
+}

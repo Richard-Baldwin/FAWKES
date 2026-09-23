@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "kind": "fawkes-wheel-ensemble-1",
+  "intended_use": "Offline plant model for the DR environment; replay validation against held-out real traces.",
+  "inputs": {
+    "features": [
+      "meas_w1",
+      "meas_w2",
+      "meas_w3",
+      "meas_w4",
+      "cmd_w1",
+      "cmd_w2",
+      "cmd_w3",
+      "cmd_w4",
+      "prev_cmd_w1",
+      "prev_cmd_w2",
+      "prev_cmd_w3",
+      "prev_cmd_w4",
+      "cmd_body_vx",
+      "cmd_body_vy",
+      "cmd_body_w",
+      "ref_vx",
+      "ref_vy",
+      "abs_cmd_w1",
+      "abs_cmd_w2",
+      "abs_cmd_w3",
+      "abs_cmd_w4",
+      "sign_cmd_w1",
+      "sign_cmd_w2",
+      "sign_cmd_w3",
+      "sign_cmd_w4",
+      "tracking_err_w1",
+      "tracking_err_w2",
+      "tracking_err_w3",
+      "tracking_err_w4",
+      "dt"
+    ],
+    "count": 30,
+    "note": "The physically transferable subset of rlearn's 47 features."
+  },
+  "outputs": [
+    "next_wheel_1",
+    "next_wheel_2",
+    "next_wheel_3",
+    "next_wheel_4"
+  ],
+  "architecture": {
+    "core": "first-order wheel response per wheel (alpha, gain)",
+    "residual": "9 ridge members on weighted bootstrap resamples",
+    "uncertainty": "ensemble std (epistemic)",
+    "first_order": {
+      "alpha_per_tick": [
+        0.5487,
+        0.607,
+        0.5073,
+        0.4815
+      ],
+      "gain": [
+        1.0003,
+        0.9959,
+        1.0003,
+        0.9954
+      ],
+      "tau_ms": [
+        11.0,
+        12.1,
+        10.1,
+        9.6
+      ]
+    }
+  },
+  "validation": {
+    "held_out": {
+      "rmse_all": [
+        0.0835,
+        0.0522,
+        0.0593,
+        0.0465
+      ],
+      "rmse_active": [
+        0.3495,
+        0.1837,
+        0.2343,
+        0.1768
+      ],
+      "active_rows": 622,
+      "rows": 12145
+    },
+    "rlearn_reference": {
+      "rmse_all": [
+        0.0798,
+        0.0494,
+        0.0526,
+        0.0445
+      ],
+      "rmse_active": [
+        0.2113,
+        0.1296,
+        0.1356,
+        0.1151
+      ],
+      "note": "rlearn used all 47 features; FAWKES v0.1 uses the transferable subset, so a gap here is expected and reported, not hidden (README FK-2)."
+    }
+  },
+  "limitations": [
+    "One robot, one carpet, one day (2026-07-23 session).",
+    "Battery condition inferred, not measured per row.",
+    "Simulator overpredicted field cross-track (rlearn's 203-vs-104 mm warning): replay-vs-real is a standing gate, never skipped."
+  ],
+  "provenance": {
+    "n_members": 9,
+    "ridge_lambda": 0.001,
+    "seed": 0,
+    "dataset_sha256": "871d1bf013905ec144c4b29e6bad79d0ae39638dc4e02632bac34fd60a2d229d",
+    "rows_total": 61087,
+    "rows_train": 48942,
+    "rows_held_out": 12145
+  }
+}

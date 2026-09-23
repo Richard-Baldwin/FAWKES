@@ -1,0 +1,92 @@
+{
+  "kind": "fawkes-cem-champion-1",
+  "knobs": {
+    "kp_pos": 4.540099223281817,
+    "kp_vel": 0.7958988696979938,
+    "acc_ff_lead_s": 0.08370453378084936,
+    "target_brake_scale": 0.5486689097565733,
+    "target_brake_reaction_s": 0.22821272370296805,
+    "kp_heading": 5.862739804925027,
+    "kp_yaw_rate": 0.33493968109036454,
+    "omega_corr_max": 2.953700969107335,
+    "trajectory_brake_scale": 0.45588645970478636,
+    "orient_lag_tau_s": 0.025850358295925663,
+    "plant_speed_guard": 0.991096268177154
+  },
+  "baseline": {
+    "kp_pos": 5.0,
+    "kp_vel": 0.7,
+    "acc_ff_lead_s": 0.14,
+    "target_brake_scale": 0.5,
+    "target_brake_reaction_s": 0.2,
+    "kp_heading": 6.0,
+    "kp_yaw_rate": 0.3,
+    "omega_corr_max": 3.0,
+    "trajectory_brake_scale": 0.5,
+    "orient_lag_tau_s": 0.05,
+    "plant_speed_guard": 1.0
+  },
+  "training": {
+    "algorithm": "cross-entropy method over the 11 interpretable gains",
+    "seeds": [
+      11,
+      22,
+      33,
+      44
+    ],
+    "population": 8,
+    "iterations": 4,
+    "seed": 7,
+    "dr_family": "dr-family-1"
+  },
+  "held_out_summary": {
+    "legs": 16,
+    "endpoint_p95_m": 0.01947,
+    "endpoint_max_m": 0.01974,
+    "cross_track_p95_m": 0.06815,
+    "cross_track_max_m": 0.09464,
+    "heading_max_rad": 0.05138,
+    "saturation_frac": 0.0,
+    "boundary_violations": 0
+  },
+  "held_out_gates": {
+    "endpoint_p95_m": {
+      "value": 0.01947,
+      "limit": 0.035,
+      "stretch": 0.01,
+      "pass": true,
+      "meets_stretch": false
+    },
+    "cross_track_p95_m": {
+      "value": 0.06815,
+      "limit": 0.12,
+      "stretch": 0.06,
+      "pass": true,
+      "meets_stretch": false
+    },
+    "heading_max_rad": {
+      "value": 0.05138,
+      "limit": 0.08,
+      "stretch": 0.05,
+      "pass": true,
+      "meets_stretch": false
+    },
+    "saturation_frac": {
+      "value": 0.0,
+      "limit": 0.08,
+      "stretch": 0.04,
+      "pass": true,
+      "meets_stretch": true
+    },
+    "boundary_violations": {
+      "value": 0,
+      "limit": 0,
+      "stretch": 0,
+      "pass": true,
+      "meets_stretch": true
+    },
+    "all_pass": true
+  },
+  "best_objective": -51.69674897126527,
+  "deployment_authorized": false
+}

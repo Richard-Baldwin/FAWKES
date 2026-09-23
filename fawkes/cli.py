@@ -250,6 +250,56 @@ def cmd_run_smoke(args) -> None:
     cmd_report(args)
 
 
+def cmd_flywheel(args) -> None:
+    """One full loop: audit -> identify -> train -> evaluate -> export -> report,
+    plus a promotion verdict. Fully offline; nothing touches a robot. The human
+    decision is only ever "install the staged candidate or not"."""
+    from datetime import datetime, timezone
+
+    cmd_audit(args)
+    cmd_identify(args)
+    args.pop, args.iterations = args.cem_pop, args.cem_iters
+    cmd_cem(args)
+    args.pop, args.iterations, args.b_seeds = args.rma_pop, args.rma_iters, args.rma_b_seeds
+    cmd_rma(args)
+    cmd_evaluate(args)
+    cmd_export(args)
+    cmd_report(args)
+
+    out = _evidence(args.tag)
+    ev = json.loads((out / "evaluation.json").read_text(encoding="utf-8"))
+    practice = ev["practice"]
+    base_s = practice["baseline_knobs"]["summary"]
+    cem_s = practice["cem_knobs"]["summary"]
+    cem_g = practice["cem_knobs"]["gates"]
+    verdict = {
+        "tag": args.tag,
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "candidate": "cem_knobs",
+        "practice": {
+            "baseline_endpoint_p95_m": base_s["endpoint_p95_m"],
+            "candidate_endpoint_p95_m": cem_s["endpoint_p95_m"],
+            "baseline_cross_p95_m": base_s["cross_track_p95_m"],
+            "candidate_cross_p95_m": cem_s["cross_track_p95_m"],
+            "all_gates_pass": cem_g["all_pass"],
+        },
+        "promote": bool(
+            cem_g["all_pass"]
+            and cem_s["endpoint_p95_m"] <= base_s["endpoint_p95_m"]
+            and cem_s["cross_track_p95_m"] <= base_s["cross_track_p95_m"]
+        ),
+        "staged_artifact": str(out / "firmware_registry_entry.json"),
+        "rule": (
+            "promote=true means the candidate beats the field-proven baseline on the "
+            "practice suite and passes every gate. It is still SIMULATION ONLY and "
+            "deployment_authorized=false: a human runs the guarded A/B (FIELD_DAY.md) "
+            "before it touches a robot."
+        ),
+    }
+    dump_json(out / "verdict.json", verdict)
+    print(f"verdict: promote={verdict['promote']} -> {out / 'verdict.json'}")
+
+
 def cmd_train(args) -> None:
     cmd_audit(args)
     args.pop, args.iterations = args.cem_pop, args.cem_iters
@@ -303,6 +353,14 @@ def main(argv=None) -> None:
     p = add("run-smoke", cmd_run_smoke, help="audit -> identify -> cem -> rma -> evaluate -> export -> report")
     p.add_argument("--tag", type=str, default="runs")
     p.add_argument("--seed", type=int, default=7)
+    p = add("flywheel", cmd_flywheel, help="one full loop: audit -> identify -> train -> evaluate -> export -> report -> verdict")
+    p.add_argument("--tag", type=str, default="flywheel")
+    p.add_argument("--seed", type=int, default=7)
+    p.add_argument("--cem-pop", type=int, default=20)
+    p.add_argument("--cem-iters", type=int, default=24)
+    p.add_argument("--rma-pop", type=int, default=16)
+    p.add_argument("--rma-iters", type=int, default=16)
+    p.add_argument("--rma-b-seeds", type=int, default=16)
     p = add("dashboard", cmd_dashboard, help="render evidence/<tag>/dashboard.png from a run's artifacts")
     p.add_argument("--tag", type=str, default="runs")
     p = add("arena", cmd_arena, help="animated side-by-side simulator: evidence/<tag>/arena.html")

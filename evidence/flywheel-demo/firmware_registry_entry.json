@@ -1,0 +1,50 @@
+{
+  "profile_id": "fawkes-cem-flywheel-demo",
+  "name": "FAWKES offline champion (simulation)",
+  "status": "SIMULATION ONLY",
+  "deployment_authorized": false,
+  "description": "FAWKES CEM champion over the rlearn gain space, trained against the domain-randomised environment. It has NOT been validated on hardware. Install only for guarded field validation via the registry, never automatically. The field-proven rollback profile stays untouched.",
+  "parameters": {
+    "trajectory.brake_scale": 0.45588645970478636,
+    "trajectory.orient_lag_tau_s": 0.025850358295925663,
+    "controller.kp_pos": 4.540099223281817,
+    "controller.kp_vel": 0.7958988696979938,
+    "controller.kp_heading": 5.862739804925027,
+    "controller.kp_yaw_rate": 0.33493968109036454,
+    "controller.omega_corr_max": 2.953700969107335,
+    "controller.acc_ff_lead_s": 0.08370453378084936,
+    "controller.target_brake_scale": 0.5486689097565733,
+    "controller.target_brake_reaction_s": 0.22821272370296805
+  },
+  "simulation_only_parameter_not_applied_onboard": {
+    "plant_speed_guard": 0.991096268177154
+  },
+  "source": {
+    "framework": "fawkes",
+    "metrics": {
+      "legs": 16,
+      "endpoint_p95_m": 0.01947,
+      "endpoint_max_m": 0.01974,
+      "cross_track_p95_m": 0.06815,
+      "cross_track_max_m": 0.09464,
+      "heading_max_rad": 0.05138,
+      "saturation_frac": 0.0,
+      "boundary_violations": 0
+    },
+    "provenance": {
+      "algorithm": "cross-entropy method over the 11 interpretable gains",
+      "seeds": [
+        11,
+        22,
+        33,
+        44
+      ],
+      "population": 8,
+      "iterations": 4,
+      "seed": 7,
+      "dr_family": "dr-family-1"
+    },
+    "exported_at": "2026-09-23T10:30:37+00:00",
+    "warning": "Simulators overpredicted field cross-track before (rlearn: 203 mm sim vs 104 mm real). Replay-vs-real-traces and the shadow ladder are mandatory before any bounded run."
+  }
+}

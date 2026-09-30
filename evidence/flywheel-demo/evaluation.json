@@ -1,0 +1,518 @@
+{
+  "practice": {
+    "baseline_knobs": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.01975,
+        "endpoint_max_m": 0.01998,
+        "cross_track_p95_m": 0.06251,
+        "cross_track_max_m": 0.09629,
+        "heading_max_rad": 0.03114,
+        "saturation_frac": 0.0,
+        "boundary_violations": 0
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.01975,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.06251,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.03114,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 0,
+          "limit": 0,
+          "stretch": 0,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "all_pass": true
+      },
+      "z_mode": "none"
+    },
+    "cem_knobs": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.01953,
+        "endpoint_max_m": 0.01985,
+        "cross_track_p95_m": 0.06636,
+        "cross_track_max_m": 0.09019,
+        "heading_max_rad": 0.0316,
+        "saturation_frac": 0.0,
+        "boundary_violations": 0
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.01953,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.06636,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.0316,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 0,
+          "limit": 0,
+          "stretch": 0,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "all_pass": true
+      },
+      "z_mode": "none"
+    },
+    "rma_oracle": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.01984,
+        "endpoint_max_m": 0.01999,
+        "cross_track_p95_m": 0.06618,
+        "cross_track_max_m": 0.09086,
+        "heading_max_rad": 0.03253,
+        "saturation_frac": 0.0,
+        "boundary_violations": 0
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.01984,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.06618,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.03253,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 0,
+          "limit": 0,
+          "stretch": 0,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "all_pass": true
+      },
+      "z_mode": "oracle"
+    },
+    "rma_adapter": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.0198,
+        "endpoint_max_m": 0.01998,
+        "cross_track_p95_m": 0.0658,
+        "cross_track_max_m": 0.11322,
+        "heading_max_rad": 0.03099,
+        "saturation_frac": 0.0,
+        "boundary_violations": 0
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.0198,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.0658,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.03099,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 0,
+          "limit": 0,
+          "stretch": 0,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "all_pass": true
+      },
+      "z_mode": "adapter",
+      "time_to_adapt_s": -1.0
+    },
+    "rma_zero": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.01991,
+        "endpoint_max_m": 0.01999,
+        "cross_track_p95_m": 0.06132,
+        "cross_track_max_m": 0.09033,
+        "heading_max_rad": 0.03251,
+        "saturation_frac": 0.0,
+        "boundary_violations": 0
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.01991,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.06132,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.03251,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 0,
+          "limit": 0,
+          "stretch": 0,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "all_pass": true
+      },
+      "z_mode": "zero"
+    }
+  },
+  "dr_family": {
+    "baseline_knobs": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.01972,
+        "endpoint_max_m": 0.15945,
+        "cross_track_p95_m": 0.06727,
+        "cross_track_max_m": 0.08575,
+        "heading_max_rad": 0.18546,
+        "saturation_frac": 0.0,
+        "boundary_violations": 1
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.01972,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.06727,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.18546,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 1,
+          "limit": 0,
+          "stretch": 0,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "all_pass": false
+      },
+      "z_mode": "none"
+    },
+    "cem_knobs": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.01976,
+        "endpoint_max_m": 0.15369,
+        "cross_track_p95_m": 0.06514,
+        "cross_track_max_m": 0.08846,
+        "heading_max_rad": 0.18279,
+        "saturation_frac": 0.0,
+        "boundary_violations": 1
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.01976,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.06514,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.18279,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 1,
+          "limit": 0,
+          "stretch": 0,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "all_pass": false
+      },
+      "z_mode": "none"
+    },
+    "rma_oracle": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.01981,
+        "endpoint_max_m": 0.15999,
+        "cross_track_p95_m": 0.07413,
+        "cross_track_max_m": 0.09705,
+        "heading_max_rad": 0.18872,
+        "saturation_frac": 0.0,
+        "boundary_violations": 2
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.01981,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.07413,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.18872,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 2,
+          "limit": 0,
+          "stretch": 0,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "all_pass": false
+      },
+      "z_mode": "oracle"
+    },
+    "rma_adapter": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.0198,
+        "endpoint_max_m": 0.16152,
+        "cross_track_p95_m": 0.06691,
+        "cross_track_max_m": 0.09998,
+        "heading_max_rad": 0.1892,
+        "saturation_frac": 0.0,
+        "boundary_violations": 1
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.0198,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.06691,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.1892,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 1,
+          "limit": 0,
+          "stretch": 0,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "all_pass": false
+      },
+      "z_mode": "adapter",
+      "time_to_adapt_s": -1.0
+    },
+    "rma_zero": {
+      "summary": {
+        "legs": 128,
+        "endpoint_p95_m": 0.01989,
+        "endpoint_max_m": 0.16186,
+        "cross_track_p95_m": 0.07781,
+        "cross_track_max_m": 0.13915,
+        "heading_max_rad": 0.1897,
+        "saturation_frac": 0.0,
+        "boundary_violations": 2
+      },
+      "gates": {
+        "endpoint_p95_m": {
+          "value": 0.01989,
+          "limit": 0.035,
+          "stretch": 0.01,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "cross_track_p95_m": {
+          "value": 0.07781,
+          "limit": 0.12,
+          "stretch": 0.06,
+          "pass": true,
+          "meets_stretch": false
+        },
+        "heading_max_rad": {
+          "value": 0.1897,
+          "limit": 0.08,
+          "stretch": 0.05,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "saturation_frac": {
+          "value": 0.0,
+          "limit": 0.08,
+          "stretch": 0.04,
+          "pass": true,
+          "meets_stretch": true
+        },
+        "boundary_violations": {
+          "value": 2,
+          "limit": 0,
+          "stretch": 0,
+          "pass": false,
+          "meets_stretch": false
+        },
+        "all_pass": false
+      },
+      "z_mode": "zero"
+    }
+  }
+}

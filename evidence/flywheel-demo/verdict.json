@@ -1,0 +1,15 @@
+{
+  "tag": "flywheel-demo",
+  "generated_at": "2026-09-23T10:30:37+00:00",
+  "candidate": "cem_knobs",
+  "practice": {
+    "baseline_endpoint_p95_m": 0.01975,
+    "candidate_endpoint_p95_m": 0.01953,
+    "baseline_cross_p95_m": 0.06251,
+    "candidate_cross_p95_m": 0.06636,
+    "all_gates_pass": true
+  },
+  "promote": false,
+  "staged_artifact": "C:\\Users\\rishi\\Documents\\GitHub\\FAWKES\\evidence\\flywheel-demo\\firmware_registry_entry.json",
+  "rule": "promote=true means the candidate beats the field-proven baseline on the practice suite and passes every gate. It is still SIMULATION ONLY and deployment_authorized=false: a human runs the guarded A/B (FIELD_DAY.md) before it touches a robot."
+}
